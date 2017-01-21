@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  go:
+    image: golang:latest
+    container_name: go
+    volumes:
+      - "/home/ec2-user/code/go-web:/go/src/github.com/tushar00jain/go-web"
+    working_dir: /go/src/github.com/tushar00jain/go-web
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+    networks:
+      - default
+    entrypoint: /bin/bash
+
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+    volumes:
+      - "/home/ec2-user/code/go-web/server/models:/docker-entrypoint-initdb.d/"
+    working_dir: /docker-entrypoint-initdb.d
+    ports:
+      - "0.0.0.0:5432:5432"
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge

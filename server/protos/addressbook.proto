@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "tech.tushar.addressbook";
+option java_outer_classname = "AddressBookProtos";
+
+option csharp_namespace = "Tushar.Protobuf.AddressBook";
+option objc_class_prefix = "AB";
+
+package addressbook;
+
+message Person {
+  int32 id = 1;  // Unique ID number for this person.
+  string name = 2;
+  string email = 3;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    string phoneNumber = 1;
+    PhoneType phoneType = 2;
+  }
+
+  // assume one phone number per person
+  PhoneNumber phoneNumber = 4;
+}
+
+// Our address book file is just one of these.
+// many to many 
+message AddressBook {
+  Person self = 1;
+  Person people = 2;
+}
