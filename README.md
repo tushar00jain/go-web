@@ -12,6 +12,7 @@ docker-compose up -d db
   ```
   go install
   go get github.com/lib/pq
+  go get github.com/go-gorp/gorp
   go run main.go
 
   docker exec -it db bash

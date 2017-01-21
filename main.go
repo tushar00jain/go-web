@@ -1,13 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"html/template"
-	"net/http"
 	"database/sql"
-	_ "github.com/lib/pq"
 	"encoding/json"
+	"fmt"
+	_ "github.com/lib/pq"
+	"github.com/go-gorp/gorp"
+	"html/template"
+	"log"
+	"net/http"
 )
 
 // schemas
@@ -20,23 +21,22 @@ const (
 )
 
 type PhoneNumber struct {
-	phoneNumber string
-	phoneType PhoneType
+	Number string
+	Type   PhoneType
 }
 
 type Person struct {
-	id int32 `json:"id,omitempty"`
-	name string `json:"name,omitempty"`
-	email string `json:"email,omitempty"`
-	phoneNumber PhoneNumber `json:"phoneNumber,omitempty"`
+	Id          int32
+	Name        string
+	Email       string
+	Number PhoneNumber
 }
 
 type AddressBook struct {
-	self Person `json:"self,omitempty"`
-	people Person `json:"people,omitempty"`
+	People []Person
 }
 
-// template testing 
+// template testing
 type Page struct {
 	Data string
 }
@@ -53,36 +53,57 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // handler for getting persons
-func getPersons(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+// func getPersons(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+func getPersons(dbmap *gorp.DbMap) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
-			data := Person{1, "test", "test@test.com", PhoneNumber{"5555555555", MOBILE}}
+			var data []Person
+			_, err := dbmap.Select(&data, "SELECT * FROM Person")
+			if err != nil {
+				fmt.Println("selct error")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			// data := Person{
+			// 	Id:    1,
+			// 	Name:  "test",
+			// 	Email: "test@test.com",
+			// 	Number: PhoneNumber{
+			// 		Number: "5555555555",
+			// 		Type:   MOBILE,
+			// 	},
+			// }
 			result, err := json.Marshal(data)
 			if err != nil {
-				fmt.Println("JSON")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
 			}
-			fmt.Println("DB")
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(result)
-			fmt.Println(result)
+		} else {
+			http.Error(w, "Wrong Method", http.StatusInternalServerError)
+			fmt.Println("Wrong Method")
+			return
 		}
-			fmt.Println("Error")
 	}
 }
 
 func main() {
-	db, err := sql.Open("postgres", "test:test@db/test")
+	db, err := sql.Open("postgres", "postgres://test:test@db/test?sslmode=disable")
+
 	if err != nil {
-    log.Fatal(err)
+		log.Fatal(err)
 	}
 	defer db.Close()
 
+	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+
 	// handle static files
-  http.HandleFunc("/", handler)
+	http.HandleFunc("/", handler)
 	http.Handle("/static/", http.FileServer(http.Dir("./static")))
 
 	// api
-  http.HandleFunc("/api/v1/persons", getPersons(db))
+	http.HandleFunc("/api/v1/persons", getPersons(dbmap))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
