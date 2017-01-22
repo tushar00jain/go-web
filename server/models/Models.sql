@@ -9,7 +9,8 @@ CREATE TABLE Person (
   "Id" SERIAL PRIMARY KEY NOT NULL,
   "Name" VARCHAR NOT NULL,
   "Email" VARCHAR,
-  "Number" PhoneNumber
+  "Number" PhoneNumber[]
+  -- "Number" PhoneNumber
 );
 
 CREATE TABLE AddressBook (
@@ -19,16 +20,26 @@ CREATE TABLE AddressBook (
 );
 
 INSERT INTO Person ("Name", "Email", "Number") VALUES
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE')),
-  ('test', 'test@test.com', ('1111111111', 'MOBILE'));
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]),
+  ('test', 'test@test.com', ARRAY[('1111111111', 'MOBILE')::PhoneNumber]);
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE')),
+  -- ('test', 'test@test.com', ('1111111111', 'MOBILE'));
 
 INSERT INTO AddressBook ("Self", "People") VALUES
   (1, 2),

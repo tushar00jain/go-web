@@ -22,14 +22,20 @@ const (
 
 type PhoneNumber struct {
 	Number string
-	Type   PhoneType
+	// Type   PhoneType
+	Type   int
+}
+
+type PhoneNumberArray struct {
+	phoneNumbers []PhoneNumber
 }
 
 type Person struct {
-	Id          int32
+	Id          int
 	Name        string
 	Email       string
-	Number PhoneNumber
+	// PhoneNumberArray
+	PhoneNumber
 }
 
 type AddressBook struct {
@@ -64,15 +70,6 @@ func getPersons(dbmap *gorp.DbMap) func(http.ResponseWriter, *http.Request) {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			// data := Person{
-			// 	Id:    1,
-			// 	Name:  "test",
-			// 	Email: "test@test.com",
-			// 	Number: PhoneNumber{
-			// 		Number: "5555555555",
-			// 		Type:   MOBILE,
-			// 	},
-			// }
 			result, err := json.Marshal(data)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
