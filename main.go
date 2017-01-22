@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	// "reflect"
 	_ "github.com/lib/pq"
-	"github.com/go-gorp/gorp"
+	// "github.com/go-gorp/gorp"
 	"html/template"
 	"log"
 	"net/http"
@@ -21,21 +22,15 @@ const (
 )
 
 type PhoneNumber struct {
-	Number string
-	// Type   PhoneType
-	Type   int
-}
-
-type PhoneNumberArray struct {
-	phoneNumbers []PhoneNumber
+	Number string `json:"Number"`
+	Type   PhoneType `json:"Type"`
 }
 
 type Person struct {
 	Id          int
 	Name        string
 	Email       string
-	// PhoneNumberArray
-	PhoneNumber
+	PhoneNumbers []PhoneNumber
 }
 
 type AddressBook struct {
@@ -59,16 +54,37 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // handler for getting persons
-// func getPersons(db *sql.DB) func(http.ResponseWriter, *http.Request) {
-func getPersons(dbmap *gorp.DbMap) func(http.ResponseWriter, *http.Request) {
+func getPersons(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+// func getPersons(dbmap *gorp.DbMap) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
-			var data []Person
-			_, err := dbmap.Select(&data, "SELECT * FROM Person")
+			// var data []Person
+			rows, err := db.Query("SELECT p.\"Id\", p.\"Name\", p.\"Email\"," +
+				"json_agg(json_build_object('Number', ph.\"Number\", 'Type', ph.\"Type\")) AS \"PhoneNumbers\"" +
+				"FROM Person p INNER JOIN PhoneNumber ph ON p.\"Id\"=ph.\"PersonId\" GROUP BY p.\"Id\";")
 			if err != nil {
 				fmt.Println("selct error")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
+			}
+			data := make([]Person, 0)
+			for rows.Next() {
+        var person Person
+				var temp string
+				err = rows.Scan(&person.Id, &person.Name, &person.Email, &temp)
+				if err != nil {
+					fmt.Println("query error")
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				tbs := []byte(temp)
+				// phoneNumbers := make([]PhoneNumber, 0)
+				if err := json.Unmarshal(tbs, &person.PhoneNumbers); err != nil {
+					fmt.Println("unmarshal error")
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				data = append(data, person)
 			}
 			result, err := json.Marshal(data)
 			if err != nil {
@@ -93,14 +109,14 @@ func main() {
 	}
 	defer db.Close()
 
-	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+	// dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 
 	// handle static files
 	http.HandleFunc("/", handler)
 	http.Handle("/static/", http.FileServer(http.Dir("./static")))
 
 	// api
-	http.HandleFunc("/api/v1/persons", getPersons(dbmap))
+	http.HandleFunc("/api/v1/persons", getPersons(db))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

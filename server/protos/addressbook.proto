@@ -25,12 +25,10 @@ message Person {
     PhoneType phoneType = 2;
   }
 
-  // assume one phone number per person
-  PhoneNumber phoneNumber = 4;
+  repeated PhoneNumber phoneNumber = 4;
 }
 
 // Our address book file is just one of these.
-// different from sql schema // like json schema
 message AddressBook {
   repeated Person people = 1;
 }
