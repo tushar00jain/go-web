@@ -79,4 +79,5 @@ INSERT INTO PhoneNumber ("PersonId", "Number", "Type") VALUES
 
 INSERT INTO AddressBook ("Self", "People") VALUES
   (1, 2),
+  (1, 3),
   (2, 3);
