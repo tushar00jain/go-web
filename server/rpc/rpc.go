@@ -44,7 +44,6 @@ func (ab *AddressBookServer) GetPersons (ctx context.Context, e *pb.Empty) (*pb.
 			fmt.Println("unmarshal error")
 			return nil, err
 		}
-		fmt.Println(string(tbs))
 
 		persons.People = append(persons.People, person)
 	}

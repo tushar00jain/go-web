@@ -1,0 +1,141 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "protos/addressbook.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/book/{id}": {
+      "get": {
+        "operationId": "GetAddressBook",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/addressbookBook"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "AddressBook"
+        ]
+      }
+    },
+    "/api/v1/persons": {
+      "get": {
+        "operationId": "GetPersons",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/addressbookPersons"
+            }
+          }
+        },
+        "tags": [
+          "AddressBook"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "PersonPhoneNumber": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "format": "string"
+        },
+        "phoneType": {
+          "$ref": "#/definitions/PersonPhoneType"
+        }
+      }
+    },
+    "PersonPhoneType": {
+      "type": "string",
+      "enum": [
+        "MOBILE",
+        "HOME",
+        "WORK"
+      ],
+      "default": "MOBILE"
+    },
+    "addressbookBook": {
+      "type": "object",
+      "properties": {
+        "people": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/addressbookPerson"
+          }
+        }
+      },
+      "description": "Our address book file is just one of these."
+    },
+    "addressbookEmpty": {
+      "type": "object"
+    },
+    "addressbookId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "addressbookPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string",
+          "format": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "string"
+        },
+        "phoneNumbers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PersonPhoneNumber"
+          }
+        }
+      }
+    },
+    "addressbookPersons": {
+      "type": "object",
+      "properties": {
+        "people": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/addressbookPerson"
+          }
+        }
+      }
+    }
+  }
+}

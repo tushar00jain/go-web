@@ -56,7 +56,7 @@ service AddressBook {
 
   rpc GetAddressBook(Id) returns (Book) {
     option(google.api.http) = {
-      get: "/api/v1/{id}"
+      get: "/api/v1/book/{id}"
     };
   }
 }
