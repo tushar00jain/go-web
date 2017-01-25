@@ -18,7 +18,7 @@ type AddressBookServer struct {
 
 func (ab *AddressBookServer) GetPersons (ctx context.Context, e *pb.Empty) (*pb.Persons, error) {
 	query := "SELECT p.\"Id\", p.\"Name\", p.\"Email\"," +
-	"json_agg(json_build_object('Number', ph.\"Number\", 'Type', ph.\"Type\")) AS \"PhoneNumbers\"" +
+	"json_agg(json_build_object('phoneNumber', ph.\"Number\", 'phoneType', ph.\"Type\")) AS \"PhoneNumbers\"" +
 	"FROM Person p INNER JOIN PhoneNumber ph ON p.\"Id\"=ph.\"PersonId\" GROUP BY p.\"Id\";"
 	rows, err := ab.Db.Query(query)
 
@@ -28,11 +28,11 @@ func (ab *AddressBookServer) GetPersons (ctx context.Context, e *pb.Empty) (*pb.
 	}
 
 	var persons pb.Persons
-	data := make([]*pb.Person, 0)
+	persons.People = make([]*pb.Person, 0)
 	for rows.Next() {
-		var person *pb.Person
+		person := &pb.Person{}
 		var temp string
-		err = rows.Scan(person.Id, person.Name, person.Email, &temp)
+		err = rows.Scan(&person.Id, &person.Name, &person.Email, &temp)
 
 		if err != nil {
 			fmt.Println("query error")
@@ -44,16 +44,15 @@ func (ab *AddressBookServer) GetPersons (ctx context.Context, e *pb.Empty) (*pb.
 			fmt.Println("unmarshal error")
 			return nil, err
 		}
+		fmt.Println(string(tbs))
 
-		data = append(data, person)
+		persons.People = append(persons.People, person)
 	}
-
-	persons.People = data
 	return &persons, nil
 }
 
 func (ab *AddressBookServer) GetAddressBook (ctx context.Context, i *pb.Id) (*pb.Book, error) {
-	var query = "SELECT d.*, json_agg(json_build_object('Number', ph.\"Number\", 'Type', ph.\"Type\")) AS \"PhoneNumbers\" FROM (" +
+	var query = "SELECT d.*, json_agg(json_build_object('phoneNumber', ph.\"Number\", 'phoneType', ph.\"Type\")) AS \"PhoneNumbers\" FROM (" +
 	"SELECT p.*" +
 	"FROM Person p INNER JOIN AddressBook a ON p.\"Id\"=a.\"People\" AND a.\"Self\"=" + "1" +
 	") d INNER JOIN PhoneNumber ph ON d.\"Id\"=ph.\"PersonId\" GROUP BY d.\"Id\", d.\"Name\", d.\"Email\";"
@@ -65,12 +64,12 @@ func (ab *AddressBookServer) GetAddressBook (ctx context.Context, i *pb.Id) (*pb
 	}
 
 	var persons pb.Book
-	data := make([]*pb.Person, 0)
+	persons.People = make([]*pb.Person, 0)
 	for rows.Next() {
-		var person *pb.Person
+		person := &pb.Person{}
 		var temp string
 
-		err = rows.Scan(person.Id, person.Name, person.Email, &temp)
+		err = rows.Scan(&person.Id, &person.Name, &person.Email, &temp)
 		if err != nil {
 			fmt.Println("query error")
 			return nil, err
@@ -82,9 +81,8 @@ func (ab *AddressBookServer) GetAddressBook (ctx context.Context, i *pb.Id) (*pb
 			return nil, err
 		}
 
-		data = append(data, person)
+		persons.People = append(persons.People, person)
 	}
 
-	persons.People = data
 	return &persons, nil
 }
