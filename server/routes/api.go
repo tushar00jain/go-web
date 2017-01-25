@@ -20,14 +20,15 @@ func GetPersons(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := make([]schemas.Person, 0)
+	data := make([]*schemas.Person, 0)
 	for rows.Next() {
-		var person schemas.Person
+		person := &schemas.Person{}
 		var temp string
 		err = rows.Scan(&person.Id, &person.Name, &person.Email, &temp)
 
 		if err != nil {
 			fmt.Println("query error")
+			fmt.Println(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -65,9 +66,9 @@ func GetAddressBook(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := make([]schemas.Person, 0)
+	data := make([]*schemas.Person, 0)
 	for rows.Next() {
-		var person schemas.Person
+		person := &schemas.Person{}
 		var temp string
 
 		err = rows.Scan(&person.Id, &person.Name, &person.Email, &temp)
