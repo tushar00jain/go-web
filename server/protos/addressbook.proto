@@ -27,11 +27,11 @@ message Person {
     PhoneType phoneType = 2;
   }
 
-  repeated PhoneNumber phoneNumber = 4;
+  repeated PhoneNumber phoneNumbers = 4;
 }
 
 message Persons {
-  repeated Persons people = 1;
+  repeated Person people = 1;
 }
 
 message Id {
@@ -54,7 +54,7 @@ service AddressBook {
     };
   }
 
-  rpc GetAdressBook(Id) returns (Book) {
+  rpc GetAddressBook(Id) returns (Book) {
     option(google.api.http) = {
       get: "/api/v1/{id}"
     };

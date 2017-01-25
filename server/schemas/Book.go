@@ -1,5 +1,5 @@
 package schemas
 
-type AddressBook struct {
+type Book struct {
 	People []Person
 }
