@@ -4,17 +4,20 @@ Start the Docker containers
 docker-compose run --service-ports go
 docker-compose up -d db
 ```
+# TODO
 
-
-#TODO
-- Automate 
-  Inside the docker container, run
+  - go
   ```
-  go install
-  go get github.com/lib/pq
-  go get github.com/go-gorp/gorp
-  go run main.go
+  cd server
+  bash gateway/stub-proxy.sh
+  cd ..
 
+  go run main.go
+  bash ${GOPATH}/bin/service
+  ```
+
+  - db
+  ```
   docker exec -it db bash
   psql -U test
   ```

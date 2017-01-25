@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-
 func main() {
 	db, err := sql.Open("postgres", "postgres://test:test@db/test?sslmode=disable")
 
@@ -26,5 +25,5 @@ func main() {
 	http.HandleFunc("/api/v1/persons", routes.GetPersons(db))
 	http.HandleFunc("/api/v1/addressBook", routes.GetAddressBook(db))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8000", nil))
 }

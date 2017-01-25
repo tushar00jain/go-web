@@ -7,6 +7,8 @@ option java_outer_classname = "AddressBookProtos";
 option csharp_namespace = "Tushar.Protobuf.AddressBook";
 option objc_class_prefix = "AB";
 
+import "google/api/annotations.proto";
+
 package addressbook;
 
 message Person {
@@ -28,7 +30,33 @@ message Person {
   repeated PhoneNumber phoneNumber = 4;
 }
 
+message Persons {
+  repeated Persons people = 1;
+}
+
+message Id {
+  int32 id = 1;
+}
+
+message Empty {
+
+}
+
 // Our address book file is just one of these.
-message AddressBook {
+message Book {
   repeated Person people = 1;
+}
+
+service AddressBook {
+  rpc GetPersons(Empty) returns (Persons) {
+    option(google.api.http) = {
+      get: "/api/v1/persons"
+    };
+  }
+
+  rpc GetAdressBook(Id) returns (Book) {
+    option(google.api.http) = {
+      get: "/api/v1/{id}"
+    };
+  }
 }
