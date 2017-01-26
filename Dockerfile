@@ -3,6 +3,7 @@ From golang:latest
 RUN \
     apt-get update -yq && \
     apt-get install -yq --no-install-recommends \
+    automake \
     autoconf \
     libtool \
     unzip
@@ -19,7 +20,6 @@ RUN \
 RUN \
   go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway && \
   go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger && \
-  go get -u github.com/grpc-ecosystem/grpc-gateway/third_party && \
   go get -u github.com/golang/protobuf/protoc-gen-go
 
 ENV LD_LIBRARY_PATH /usr/local/lib
@@ -36,5 +36,4 @@ WORKDIR /go/src/github.com/tushar00jain/go-web
 
 RUN \
   go get github.com/lib/pq && \
-  go get github.com/go-gorp/gorp && \
-  go install
+  go get github.com/go-gorp/gorp

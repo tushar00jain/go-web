@@ -6,6 +6,7 @@ docker-compose up -d db
 # TODO
 
   - go
+
   ```
   cd server
   bash gateway/stub-proxy.sh

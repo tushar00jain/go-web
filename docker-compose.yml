@@ -2,7 +2,7 @@ version: '2'
 
 services:
   go:
-    build: .
+    image: tushar00jain/goweb_go:latest
     container_name: go
     ports:
       - "8000:8000"
