@@ -1,6 +1,6 @@
 Start the Docker containers
 ```
-docker-compose run --service-ports go
+docker-compose run --service-ports go_main
 docker-compose up -d db
 ```
 # TODO
@@ -11,9 +11,10 @@ docker-compose up -d db
   cd server
   bash gateway/stub-proxy.sh
   cd ..
-
   go run main.go
-  bash ${GOPATH}/bin/service
+
+  docker exec -it go_main bash
+  ${GOPATH}/bin/service
   ```
 
 # DEBUG

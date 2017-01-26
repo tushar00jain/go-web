@@ -1,9 +1,9 @@
 version: '2'
 
 services:
-  go:
+  go_main:
     image: tushar00jain/goweb_go:latest
-    container_name: go
+    container_name: go_main
     ports:
       - "8000:8000"
       - "8080:8080"
