@@ -1,4 +1,3 @@
-
 Start the Docker containers
 ```
 docker-compose run --service-ports go
@@ -15,6 +14,8 @@ docker-compose up -d db
   go run main.go
   bash ${GOPATH}/bin/service
   ```
+
+# DEBUG
 
   - db
   ```
