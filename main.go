@@ -37,17 +37,6 @@ func main() {
 	}
 
 	defer db.Close()
-
-	// // handle static files
-	// http.HandleFunc("/", routes.Index)
-	// http.Handle("/static/", http.FileServer(http.Dir("./static")))
-  //
-	// // api
-	// http.HandleFunc("/api/v1/persons", utils.Only("GET", db, routes.GetPersons))
-	// http.HandleFunc("/api/v1/addressBook", utils.Only("GET", db, routes.GetAddressBook))
-  //
-	// log.Fatal(http.ListenAndServe(":8000", nil))
-
 	flag.Parse()
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -57,7 +46,7 @@ func main() {
 
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-  addressBookServer := newServer(db)
+	addressBookServer := newServer(db)
 
 	pb.RegisterAddressBookServer(grpcServer, addressBookServer)
 	grpcServer.Serve(lis)
