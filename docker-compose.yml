@@ -1,14 +1,29 @@
 version: '2'
 
 services:
+
   go_main:
     image: tushar00jain/goweb_go:latest
     container_name: go_main
     ports:
       - "8000:8000"
+    networks:
+      - default
+    volumes:
+      - "/${HOME}/code/go/src/github.com/tushar00jain/go-web:/go/src/github.com/tushar00jain/go-web"
+    working_dir: /go/src/github.com/tushar00jain/go-web
+    entrypoint: /bin/bash
+
+  go_service:
+    image: tushar00jain/goweb_go:latest
+    container_name: go_service
+    ports:
       - "8080:8080"
     networks:
       - default
+    volumes:
+      - "/${HOME}/code/go/src/github.com/tushar00jain/go-web:/go/src/github.com/tushar00jain/go-web"
+    working_dir: /go/src/github.com/tushar00jain/go-web/server
     entrypoint: /bin/bash
 
   db:
@@ -19,7 +34,7 @@ services:
       - POSTGRES_USER=test
       - POSTGRES_DB=test
     volumes:
-      - "/${HOME}/code/go-web/server/models:/docker-entrypoint-initdb.d/"
+      - "/${HOME}/code/go/src/github.com/tushar00jain/go-web/server/models:/docker-entrypoint-initdb.d/"
     working_dir: /docker-entrypoint-initdb.d
     ports:
       - "0.0.0.0:5432:5432"

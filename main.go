@@ -16,7 +16,7 @@ import (
 	"github.com/tushar00jain/go-web/server/rpc"
 	// "github.com/tushar00jain/go-web/server/utils"
 
-	pb "github.com/tushar00jain/service/protos"
+	pb "github.com/tushar00jain/go-web/server/service/protos"
 )
 
 var (

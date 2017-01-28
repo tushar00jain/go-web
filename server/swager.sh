@@ -1,4 +1,4 @@
-SERVICE_PROTO="${GOPATH}/src/github.com/tushar00jain/service"
+SERVICE_PROTO="${GOPATH}/src/github.com/tushar00jain/go-web/server/service"
 
 protoc -I/usr/local/include -I. \
  -I$GOPATH/src \
