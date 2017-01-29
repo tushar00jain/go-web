@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	addressbookEndpoint = flag.String("addressbook_endpoint", "goweb_go_main_run_1:8000", "endpoint of AddressBook")
+	addressbookEndpoint = flag.String("addressbook_endpoint", "go_main:8000", "endpoint of AddressBook")
 )
 
 func run() error {
