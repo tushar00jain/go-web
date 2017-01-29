@@ -6,15 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net"
-	// "net/http"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 
 	_ "github.com/lib/pq"
-	// "github.com/tushar00jain/go-web/server/routes"
 	"github.com/tushar00jain/go-web/server/rpc"
-	// "github.com/tushar00jain/go-web/server/utils"
 
 	pb "github.com/tushar00jain/go-web/server/service/protos"
 )
